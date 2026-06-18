@@ -1,0 +1,426 @@
+/* ==========================================================
+   LEDGER -- Expense Tracker styles
+   Design concept: a personal paper ledger book, not a SaaS
+   dashboard. Warm paper tone, hand-ruled hairlines, a single
+   deep ink-green accent, monospace for every number so amounts
+   align like a real account book.
+   ========================================================== */
+
+:root {
+    --paper: #F6F1E7;
+    --paper-raised: #FCFAF3;
+    --ink: #2B2520;
+    --ink-soft: #6B6255;
+    --rule: #DDD4C0;
+    --ledger-green: #2F5D4F;
+    --ledger-green-deep: #1F4438;
+    --rust: #B5562D;
+    --rust-soft: #F1DDD2;
+
+    --font-display: 'Fraunces', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+        repeating-linear-gradient(
+            transparent, transparent 38px, var(--rule) 38px, var(--rule) 39px
+        );
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.ledger-shell {
+    max-width: 980px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 28px;
+}
+
+/* ---------- TOPBAR ---------- */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0 18px;
+    border-bottom: 2px solid var(--ink);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.brand-mark {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ledger-green-deep);
+}
+
+.brand-text {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-soft);
+}
+
+.topnav a { padding: 4px 0; border-bottom: 2px solid transparent; }
+.topnav a.active { color: var(--ink); border-bottom-color: var(--ledger-green); }
+.topnav a:hover { color: var(--ink); }
+
+.topnav-add {
+    background: var(--ledger-green-deep);
+    color: var(--paper-raised) !important;
+    padding: 8px 14px !important;
+    border-radius: 3px;
+    border-bottom: none !important;
+}
+.topnav-add:hover { background: var(--ledger-green); }
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+
+.user-tag::before { content: "— "; }
+
+.logout-form {
+    margin: 0;
+    display: inline;
+}
+
+.logout-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    color: var(--ink-soft);
+}
+.logout-link:hover { color: var(--rust); }
+
+/* ---------- MAIN ---------- */
+.ledger-main { flex: 1; padding: 32px 0 48px; }
+
+.flash {
+    padding: 11px 16px;
+    border-radius: 3px;
+    margin-bottom: 22px;
+    font-size: 14px;
+    border: 1px solid var(--rule);
+    background: var(--paper-raised);
+}
+.flash-success { border-color: var(--ledger-green); color: var(--ledger-green-deep); }
+.flash-error { border-color: var(--rust); color: var(--rust); }
+
+/* ---------- PAGE HEADER ---------- */
+.page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.page-head h1 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.page-head .subtitle {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* ---------- SUMMARY ROW ---------- */
+.summary-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    margin-bottom: 32px;
+}
+
+.summary-card {
+    background: var(--paper-raised);
+    padding: 18px 20px;
+}
+
+.summary-card .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+}
+
+.summary-card .value {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.summary-card .value.green { color: var(--ledger-green-deep); }
+
+/* ---------- DASHBOARD LAYOUT (entries + chart side by side) ---------- */
+.dash-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 28px;
+}
+
+@media (max-width: 760px) {
+    .dash-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 22px 24px;
+}
+
+.panel h2 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel h2 .see-all {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ledger-green-deep);
+    text-decoration: underline;
+}
+
+/* ---------- ENTRY ROW (ledger line item) ---------- */
+.entry-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--rule);
+    gap: 12px;
+}
+.entry-row:last-child { border-bottom: none; }
+
+.entry-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.entry-title { font-weight: 500; font-size: 14.5px; }
+.entry-meta { font-size: 12px; color: var(--ink-soft); }
+
+.category-chip {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--rust-soft);
+    color: var(--rust);
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+.entry-amount {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.entry-actions { display: flex; gap: 10px; font-size: 12px; }
+.entry-actions a { color: var(--ink-soft); text-decoration: underline; }
+.entry-actions a:hover { color: var(--ledger-green-deep); }
+.entry-actions .del-link:hover { color: var(--rust); }
+
+.empty-state {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--ink-soft);
+    font-size: 14px;
+}
+.empty-state a { color: var(--ledger-green-deep); text-decoration: underline; }
+
+/* ---------- CHART LEGEND ---------- */
+#chartCanvasWrap { position: relative; height: 220px; margin-bottom: 16px; }
+
+.legend-list { display: flex; flex-direction: column; gap: 8px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.legend-label { flex: 1; color: var(--ink-soft); }
+.legend-value { font-family: var(--font-mono); font-weight: 500; }
+
+/* ---------- FORM ---------- */
+.form-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 30px 32px;
+    max-width: 520px;
+}
+
+.form-card h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    margin: 0 0 22px;
+}
+
+.field-group { margin-bottom: 18px; }
+
+.field-group label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    color: var(--ink);
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+    outline: none;
+    border-color: var(--ledger-green);
+}
+
+.field-group .errorlist {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    color: var(--rust);
+    font-size: 12.5px;
+}
+
+.form-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+.btn {
+    display: inline-block;
+    padding: 11px 22px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.btn-primary { background: var(--ledger-green-deep); color: var(--paper-raised); }
+.btn-primary:hover { background: var(--ledger-green); }
+
+.btn-secondary { background: transparent; color: var(--ink-soft); border-color: var(--rule); }
+.btn-secondary:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+.btn-danger { background: var(--rust); color: var(--paper-raised); }
+.btn-danger:hover { background: #963c1d; }
+
+/* ---------- FILTER PILLS ---------- */
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+
+.filter-pill {
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+}
+.filter-pill.active { background: var(--ledger-green-deep); color: var(--paper-raised); border-color: var(--ledger-green-deep); }
+.filter-pill:hover:not(.active) { border-color: var(--ink-soft); color: var(--ink); }
+
+/* ---------- AUTH PAGES ---------- */
+.auth-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 40px 38px;
+    width: 100%;
+    max-width: 380px;
+}
+
+.auth-mark {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--ledger-green-deep);
+    margin-bottom: 6px;
+}
+
+.auth-card h1 { font-family: var(--font-display); font-size: 24px; margin: 0 0 6px; }
+.auth-card .auth-sub { color: var(--ink-soft); font-size: 13.5px; margin-bottom: 26px; }
+
+.auth-switch { margin-top: 20px; font-size: 13.5px; color: var(--ink-soft); text-align: center; }
+.auth-switch a { color: var(--ledger-green-deep); text-decoration: underline; font-weight: 500; }
+
+/* ---------- FOOTER ---------- */
+.ledger-footer {
+    text-align: center;
+    padding: 18px 0;
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--rule);
+}
+
+/* ---------- DELETE CONFIRM ---------- */
+.confirm-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--rust-soft);
+    border-radius: 4px;
+    padding: 28px 30px;
+    max-width: 460px;
+}
+.confirm-card h1 { font-family: var(--font-display); font-size: 22px; margin: 0 0 10px; }
+.confirm-card p { color: var(--ink-soft); font-size: 14px; }

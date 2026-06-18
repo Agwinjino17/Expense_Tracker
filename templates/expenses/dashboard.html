@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Overview - Ledger{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Overview</h1>
+        <div class="subtitle">A running record of where the money goes.</div>
+    </div>
+</div>
+
+<div class="summary-row">
+    <div class="summary-card">
+        <div class="label">Total recorded</div>
+        <div class="value">&#8377;{{ total_spent|floatformat:2 }}</div>
+    </div>
+    <div class="summary-card">
+        <div class="label">This month</div>
+        <div class="value green">&#8377;{{ this_month_total|floatformat:2 }}</div>
+    </div>
+    <div class="summary-card">
+        <div class="label">Entries logged</div>
+        <div class="value">{{ expense_count }}</div>
+    </div>
+</div>
+
+<div class="dash-grid">
+    <div class="panel">
+        <h2>Recent entries <a href="{% url 'expense_list' %}" class="see-all">See all</a></h2>
+
+        {% if expenses %}
+            {% for expense in expenses %}
+            <div class="entry-row">
+                <div class="entry-main">
+                    <span class="entry-title">{{ expense.title }}</span>
+                    <span class="entry-meta">
+                        <span class="category-chip">{{ expense.get_category_display }}</span>{{ expense.date|date:"d M Y" }}
+                    </span>
+                </div>
+                <div class="entry-amount">&#8377;{{ expense.amount|floatformat:2 }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                No entries yet. <a href="{% url 'add_expense' %}">Add your first expense</a> to start the ledger.
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <h2>By category</h2>
+        {% if category_totals %}
+            <div id="chartCanvasWrap">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="legend-list" id="legendList"></div>
+        {% else %}
+            <div class="empty-state">Add a few entries to see the breakdown here.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+{% if category_totals %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endif %}
+{% endblock %}

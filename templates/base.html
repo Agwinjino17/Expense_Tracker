@@ -1,0 +1,59 @@
+<!--
+==========================================================
+BASE.HTML  -  The master template that every page extends
+==========================================================
+-->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ledger{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="ledger-shell">
+        <header class="topbar">
+            <a href="{% url 'dashboard' %}" class="brand">
+                <span class="brand-mark">₹</span>
+                <span class="brand-text">Ledger</span>
+            </a>
+
+            {% if user.is_authenticated %}
+            <nav class="topnav">
+                <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Overview</a>
+                <a href="{% url 'expense_list' %}" class="{% if request.resolver_match.url_name == 'expense_list' %}active{% endif %}">All entries</a>
+                <a href="{% url 'add_expense' %}" class="topnav-add">+ Add entry</a>
+            </nav>
+            <div class="topbar-user">
+                <span class="user-tag">{{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-link">Sign out</button>
+                </form>
+            </div>
+            {% endif %}
+        </header>
+
+        <main class="ledger-main">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="ledger-footer">
+            <span>Ledger &middot; a personal expense record</span>
+        </footer>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

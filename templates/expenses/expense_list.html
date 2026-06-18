@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}All entries - Ledger{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>All entries</h1>
+        <div class="subtitle">Every expense you've recorded, filterable by category.</div>
+    </div>
+    <a href="{% url 'add_expense' %}" class="btn btn-primary">+ Add entry</a>
+</div>
+
+<div class="filter-row">
+    <a href="{% url 'expense_list' %}" class="filter-pill {% if not selected_category %}active{% endif %}">All</a>
+    {% for value, label in categories %}
+        <a href="?category={{ value }}" class="filter-pill {% if selected_category == value %}active{% endif %}">{{ label }}</a>
+    {% endfor %}
+</div>
+
+<div class="panel">
+    {% if expenses %}
+        {% for expense in expenses %}
+        <div class="entry-row">
+            <div class="entry-main">
+                <span class="entry-title">{{ expense.title }}</span>
+                <span class="entry-meta">
+                    <span class="category-chip">{{ expense.get_category_display }}</span>{{ expense.date|date:"d M Y" }}
+                    {% if expense.notes %} &middot; {{ expense.notes|truncatechars:40 }}{% endif %}
+                </span>
+            </div>
+            <div class="entry-amount">&#8377;{{ expense.amount|floatformat:2 }}</div>
+            <div class="entry-actions">
+                <a href="{% url 'edit_expense' expense.pk %}">Edit</a>
+                <a href="{% url 'delete_expense' expense.pk %}" class="del-link">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">No entries in this category yet.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign in - Ledger{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+    <div class="auth-card">
+        <div class="auth-mark">&#8377;</div>
+        <h1>Welcome back</h1>
+        <div class="auth-sub">Sign in to see your ledger.</div>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="field-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" style="width:100%;">Sign in</button>
+        </form>
+
+        <div class="auth-switch">New here? <a href="{% url 'signup' %}">Create an account</a></div>
+    </div>
+</div>
+{% endblock %}

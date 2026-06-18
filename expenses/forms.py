@@ -1,12 +1,3 @@
-"""
-==========================================================
-FORMS.PY (expenses app)
-==========================================================
-A ModelForm auto-generates form fields from the Expense model,
-so we don't have to write each <input> field by hand AND get
-free validation (e.g. amount must be a number).
-"""
-
 from django import forms
 from .models import Expense
 
